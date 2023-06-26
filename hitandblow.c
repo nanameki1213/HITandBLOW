@@ -10,6 +10,7 @@ int main(void) {
 
 	srand((unsigned)time(NULL));
 
+  // 1. 答えとなる数を設定する
 	i = 0;
 	int illegal_num[9] = {0};
 	while(i < DIGITS) {
@@ -22,14 +23,13 @@ int main(void) {
 	}
 
 	while(hit_num != DIGITS) {
-		hit_num = 0, blow_num = 0;
 		int input[DIGITS];
+		hit_num = 0, blow_num = 0;
 
-		// プレイヤーの入力にillegal_numを再利用
+		// 2. プレイヤーからの数の入力を行う
 		for(i = 0; i < 9; i++) {
 			illegal_num[i] = 0;
 		}
-
 		i = 0;
 		printf("%d桁の整数を入力\n", DIGITS);
 
@@ -37,7 +37,7 @@ int main(void) {
 			printf("%d桁目を入力: ", i + 1);
 			scanf("%d", &input[i]);
 			if(illegal_num[input[i]] == 1) {
-				printf("重複しない値再入力\n");
+				printf("重複しない値を再入力\n");
 				continue;
 			}
 
@@ -45,13 +45,14 @@ int main(void) {
 			i++;
 		}
 
-		// hit数をカウント
+    // 3. 入力された数のヒット数を計算
 		for(i = 0; i < DIGITS; i++) {
 			if(input[i] == ans[i]) {
 				hit_num++;
 			}
 		}
-		// blow数をカウント
+
+    // 4. 入力された数のブロー数を計算
 		for(i = 0; i < DIGITS; i++) {
 			for(j = 0; j < DIGITS; j++) {
 				if(ans[i] == input[j]) {
@@ -62,12 +63,13 @@ int main(void) {
 			}
 		}
 
+    // 5. 結果を表示
 		if(hit_num == DIGITS) {
 			printf("正解!\n");
 			break;
 		}
-
 		printf("hit: %d, blow: %d\n\n", hit_num, blow_num);
+		
 	}
 	return 0;
 }
