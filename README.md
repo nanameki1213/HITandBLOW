@@ -159,9 +159,9 @@ for(i = 0; i < DIGITS_NUM; i++) {
 
 ```hitandblow.c
 for(i = 0; i < DIGITS_NUM; i++) {
-	if(input_array[i] == ans[i]) {
-		hit_num++;
-	}
+  if(input_array[i] == ans[i]) {
+    hit_num++;
+  }
 }
 ```
 
@@ -173,23 +173,23 @@ for(i = 0; i < DIGITS_NUM; i++) {
 
 ```hitandblow.c
 for(i = 0; i < DIGITS_NUM; i++) {
-	for(j = 0; j < DIGITS_NUM; j++) {
-		if(ans[i] == input_array[j]) {
-					if(i != j) {
-						blow_num++;
-          				}
-    		}
-	}
+  for(j = 0; j < DIGITS_NUM; j++) {
+    if(ans[i] == input_array[j]) {
+      if(i != j) {
+        blow_num++;
+      }
+    }
+  }
 }
 ```
 
-ブロー数の計算では、2重ループを使用します。
+ブロー数の計算では、2重ループを使用します。コードをよく追って見てください。ansの各要素ごとに、inputの全要素と比較する処理を書く必要があります。
 
 ### 結果を表示
 ```hitandblow.c
 if(hit_num == DIGITS_NUM) {
-	printf("正解!\n");
-	break;
+  printf("正解!\n");
+  break;
 }
 printf("hit: %d, blow: %d\n\n", hit_num, blow_num);
 ```
