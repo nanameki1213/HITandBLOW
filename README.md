@@ -177,8 +177,8 @@ for(i = 0; i < DIGITS_NUM; i++) {
 		if(ans[i] == input_array[j]) {
 					if(i != j) {
 						blow_num++;
-          }
-    }
+          				}
+    		}
 	}
 }
 ```
