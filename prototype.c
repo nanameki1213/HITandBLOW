@@ -7,13 +7,14 @@ int main(void) {
   int ans[DIGITS_NUM];
   int i, j;
   int hit_num = 0, blow_num = 0;
+  int input;
 
   srand((unsigned)time(NULL));
 
   // 1. 答えとなる数を設定する
 
   while(/* プレイヤーが正解しない間 */) {
-    int input[DIGITS_NUM];
+    int input_array[DIGITS_NUM];
     int hit_num = 0, blow_num = 0;
 
     // 2. プレイヤーからの数の入力を行う
