@@ -4,6 +4,10 @@ C言語でヒットアンドブローを作成する手順を以下に示しま�
 これまでのC言語の知識を使いながら、足りない部分は補完します。
 わからないことがあったら、調べたり聞いたりしてください。
 
+:::note info
+prototype.cに、input_arrayの宣言が無かったので追加しました
+:::
+
 ## 完成したゲームを遊んでみる
 
 作り始める前に、ゲームをやってみよう
@@ -37,7 +41,7 @@ int main(void) {
 main関数内の初めの2行は、変数宣言が行われています。正解の3桁を格納するansという名前のint型配列と、繰返しのインデックスとして後々使うiとjを宣言しています。DIGITS_NUMについては後述します。さらに、hit_num, blow_numはそれぞれヒット数、ブロー数を格納するために用意しています。hit_num, blow_numについては、後にカウントを行うため、0で初期化しています。
 ```prototype.c
 while(/* プレイヤーが正解しない間 */) {
-    int input[DIGITS_NUM];
+    int input_array[DIGITS_NUM];
     int input;
 ```
 ゲームの進行部分にあたるループの中でも、変数宣言が行われています。プレイヤーから入力された3桁の数字を格納するint型変数inputと、inputの各桁の数字を格納するための3つの要素を持つint型の配列input_arrayを宣言しています。この二つの使い分けについては後述します。
@@ -124,9 +128,9 @@ DIGITS_NUMというマクロを追加して、配列の宣言に用いていま�
 ```hitandblow.c
 // 1. 答えとなる数を設定する
 // 正解: 123
-ans[0] = 1;
+ans[0] = 3;
 ans[1] = 2;
-ans[2] = 3;
+ans[2] = 1;
 ```
 
 正解の配列であるansの各要素に、数字を代入しています。```// 正解: 123```とあるように、今回正解の数は123にしました。あくまで実装例なので、正解の数は自分で決めてください。
@@ -183,90 +187,12 @@ for(i = 0; i < DIGITS_NUM; i++) {
 }
 ```
 
-ブロー数の計算では、2重ループを使用します。コードをよく追って見てください。ansの各要素ごとに、inputの全要素と比較する処理を書く必要があります。
+ブロー数の計算では、2重ループを使用します。コードをよく追って見てください。ansの各要素ごとに、inputの全要素と比較する処理を書く必要があります。 
 
 ### 結果を表示
+
 ```hitandblow.c
-if(hit_num == DIGITS_NUM) {
-  printf("正解!\n");
-  break;
-}
 printf("hit: %d, blow: %d\n\n", hit_num, blow_num);
 ```
 
-前までに得られたヒット数、ブロー数をもとに、結果を表示します。if文でhit_numの数がDIGITS_NUMと一致しているかを判定、すなわち正解しているかどうかを判定し、正解していたら"正解!"と出力して、while文をbreak;で抜けます。もし正解していなければ、while文を抜けずに、その次のprintf文でhit_numとblow_numを出力します。
-
-### ループの終了条件
-
-1~5までを実装したら、プレイヤーの回答が一回行える処理がかけました。あとはこれをプレイヤーが正解するまで繰り返すだけです。prototype.cではすでにwhile文が記述されています。このwhile文の継続条件は"プレイヤーが正解しない間"です。しかしすでに"5.結果を表示する"で、正解しているかどうかの判定を行ってwhile文を抜けるかどうかは実装済みなので、```while(1)```のようにして無限ループ状態にします。
-
-## ひとまず完成
-
-ひとまず完成しました。1~5の断片的なコードを繋げたものをつぎにのせます
-
-```hitandblow_beta.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#define DIGITS_NUM 3
-
-int main(void) {
-	int ans[DIGITS_NUM];
-	int i, j;
-	int hit_num = 0, blow_num = 0;
-
-	srand((unsigned)time(NULL));
-
-  	// 1. 答えとなる数を設定する
-	i = 0;
-	int illegal_num[9] = {0};
-	while(i < DIGITS_NUM) {
-		ans[i] = rand()%9;
-		if(illegal_num[ans[i]] == 1) {
-			continue;
-		}
-		illegal_num[ans[i]] = 1;
-		i++;
-	}
-
-	while(1) {
-		int input_array[DIGITS_NUM];
-		int input;
-		hit_num = 0, blow_num = 0;
-
-		// 2. プレイヤーからの数の入力を行う
-    		printf("%d桁の整数を入力: ", DIGITS_NUM);
-    		scanf("%d", &input);
-    		for(i = 0; i < DIGITS_NUM; i++) {
-      		input_array[i] = input%10;
-      		input = input / 10;
-    		}
-
-		// 3. 入力された数のヒット数を計算
-		for(i = 0; i < DIGITS_NUM; i++) {
-			if(input_array[i] == ans[i]) {
-				hit_num++;
-				}
-		}
-
-	    	// 4. 入力された数のブロー数を計算
-		for(i = 0; i < DIGITS_NUM; i++) {
-			for(j = 0; j < DIGITS_NUM; j++) {
-				if(ans[i] == input_array[j]) {
-					if(i != j) {
-						blow_num++;
-					}
-				}	
-			}
-		}
-
-	    	// 5. 結果を表示
-	    	if(hit_num == DIGITS_NUM) {
-	      		printf("正解!\n");
-	      		break;
-	    	}
-		printf("hit: %d, blow: %d\n\n", hit_num, blow_num);
-	}
-	return 0;
-}
-```
+前までに得られたヒット数、ブロー数をもとに、結果を表示します。これは、単にhit_numとblow_numを表示するだけです。
